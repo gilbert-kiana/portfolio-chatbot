@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import SupportEngine from '../SupportEngine';
+import SupportEngine from "../SupportEngine";
 
-import './index.css';
+import "./index.css";
 
 const Home = () => {
   return (
     <div>
-        <div dangerouslySetInnerHTML={{ __html: htmlCode }} ></div>
+      <div dangerouslySetInnerHTML={{ __html: htmlCode }}></div>
 
-        <SupportEngine />
+      <SupportEngine />
     </div>
   );
-}
+};
 
 export default Home;
 
@@ -77,7 +77,7 @@ export const htmlCode = `
                         <li class="">
                           <a href="#team" class="dorik-nav--link pricing"
                             ><span class="dorik-nav--link-text"
-                              >Pricing</span
+                              >Pricings</span
                             ></a
                           >
                         </li>
@@ -1167,5 +1167,4 @@ export const htmlCode = `
       })();
     </script>
 </div>
-`
-
+`;
