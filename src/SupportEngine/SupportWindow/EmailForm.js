@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { styles } from "../styles";
-
+import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
 
 import Avatar from "../Avatar";
@@ -10,10 +10,54 @@ const EmailForm = (props) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  function getOrCreateUser(callback) {
+    axios
+      .put(
+        "https://api.chatengine.io/users/",
+        {
+          username: email,
+          secret: email,
+          email: email,
+        },
+        { headers: { "Private-key": process.env.REACT_APP_CE_PRIVATE_KEY } }
+      )
+      .then((response) => {
+        callback(response.data);
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
+        // You may want to handle the error and provide feedback to the user
+      });
+  }
+
+  function getOrCreateChat(callback) {
+    axios
+      .put(
+        "https://api.chatengine.io/chats/",
+        {
+          usernames: ["gilbert", email],
+          is_direct_chat: true,
+        },
+        { headers: { "Private-key": process.env.REACT_APP_CE_PRIVATE_KEY } }
+      )
+      .then((response) => {
+        callback(response.data);
+      })
+      .catch((error) => {
+        console.error("Error creating chat:", error);
+      });
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
+    console.log(process.env.REACT_APP_CE_PRIVATE_KEY);
     setLoading(true);
     console.log("sending email", email);
+
+    getOrCreateUser((user) => {
+      props.setUser(user);
+      getOrCreateChat((chat) => props.setChat(chat));
+    });
   }
 
   return (
@@ -21,8 +65,8 @@ const EmailForm = (props) => {
       style={{
         ...styles.emailFormWindow,
         ...{
-          height: "100%",
-          opacity: "1",
+          height: props.visible ? "100%" : "0%",
+          opacity: props.visible ? "1" : 0,
         },
       }}
     >
@@ -82,11 +126,11 @@ const EmailForm = (props) => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Your Email"
           />
-          <div>
-            Enter Your Email <br />
-            To Get Started{" "}
-          </div>
         </form>
+        <div style={styles.bottomText}>
+          Enter Your Email <br />
+          To Get Started{" "}
+        </div>
       </div>
     </div>
   );
