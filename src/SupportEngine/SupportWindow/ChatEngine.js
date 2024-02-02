@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { ChatEngineWrapper, Socket, ChatFeed } from "react-chat-engine";
+import { ChatEngine, Socket, ChatFeed } from "react-chat-engine";
 
-const ChatEngine = (props) => {
+const ChatEngineWindow = (props) => {
+  useEffect(() => {
+    if (props.visible) {
+      setTimeout(() => {
+        setShowChat(true);
+      }, 500);
+    }
+  });
+
   return (
     <div
       className="transition-5"
@@ -13,17 +21,17 @@ const ChatEngine = (props) => {
       }}
     >
       {props.visible && (
-        <ChatEngineWrapper>
+        <ChatEngine>
           <Socket
             projectID={process.env.REACT_APP_CE_PROJECT_ID}
             userName={props.user.email}
             userSecret={props.user.email}
           />
           <ChatFeed activeChat={props.chat.id} />
-        </ChatEngineWrapper>
+        </ChatEngine>
       )}
     </div>
   );
 };
 
-export default ChatEngine;
+export default ChatEngineWindow;
